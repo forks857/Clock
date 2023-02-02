@@ -3,12 +3,8 @@
 #include <unistd.h>
     int main(void)
     {
-      //to check time you could either wait until theres a change, or do progressive checking: wait 0.1 seconds to find the change, then wait 0.9 seconds before checking every 0.01 seconds for a change, etc. waiting once may be simpler in the long run.
-      //either the chromebook is slightly off or this is slightly fast.
-//At this point, it is accurate. the next steps are probably going to be:
-      //going through comments and deleting them, 
-      //going through and seeing if it can be shortened in some way. 
-      //Time at 20:30:35 on Jan 31, 2023 -8 UTC is 1675225835
+//At this point, it is a couple of seconds behind some other clocks, but I think this is more accurate. 
+      //Time at 20:30:35 on Jan 31, 2023 -8 UTC is 1675225835, for testing purposes.
 
       const int second = 1;
       const int minute = 60;
@@ -17,14 +13,10 @@
       const int month[2][12] = {{2678400, 5097600, 7776000, 10368000, 13046400, 15638400, 18316800, 20995200, 23587200, 26265600, 28857600, 3153600}, {2678400, 5184000, 7862400, 10454400, 13132800, 15724800, 18403200, 21081600, 23673600, 26352000, 28944000, 31622400}};
       const int year = 31536000;
       const int leapYear = 31622400;
- //Bob is used to manipulate the time without touching its actual value
-
       int timezone;
       int military;
-      //all above values are in seconds. 
       printf("Current timezone? (PST would be -8, for instance)\n");
       scanf("%d", &timezone);
-      //add in a military/normal time version, also add in an array of timezone names
       printf("Enter 1 for 24 hour clock, anything else for 12 hour clock.\n");
         scanf("%d", &military);
       while(1) {
@@ -32,6 +24,7 @@
         if(hello != time(NULL)) {
         printf("\033[0;0H\033[2J");
         hello = time(NULL);
+        //Bob is used to manipulate the time without touching its actual value
         int Bob = hello;
         Bob += (timezone * hour);
         int leapDays = 0;
@@ -43,11 +36,11 @@
         int currentMinute = 0;
         int currentSecond = 0;
         while (1) {
-          if (currentYear % 4 == 0)  { //if it's a leap year
+          if (currentYear % 4 == 0)  { 
             Bob -= leapYear;
             currentYear++;
             leapDays++;
-          } else { //if it isn't a leap year
+          } else { 
             Bob -= year;
             currentYear++;
           }
@@ -59,14 +52,13 @@
           break;
         }
       }
-      //don't need to do a check because if it is a leap year, currentLeapYear will have a value of1 in the array, and if it isn't, currentLeapYear will be #0 in the array
+      //don't need to do a check because if it is a leap year, currentLeapYear will have a value of 1 in the array, and if it isn't, currentLeapYear will have a value of 0 in the array
       int i = 0;
       while(1) {
         if (month[currentLeapYear][i] > Bob) {
-          currentMonth = i + 1; //+1 is only because arrays start at 0
+          currentMonth = i + 1; 
           Bob -= month[currentLeapYear][i-1];
           break;
-          //subtracts the previous month's total 
         } else {
           i++;
         }
