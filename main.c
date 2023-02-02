@@ -20,11 +20,13 @@
  //Bob is used to manipulate the time without touching its actual value
 
       int timezone;
+      int military;
       //all above values are in seconds. 
       printf("Current timezone? (PST would be -8, for instance)\n");
       scanf("%d", &timezone);
       //add in a military/normal time version, also add in an array of timezone names
-
+      printf("Enter 1 for 24 hour clock, anything else for 12 hour clock.\n");
+        scanf("%d", &military);
       while(1) {
         int hello;
         if(hello != time(NULL)) {
@@ -49,19 +51,17 @@
             Bob -= year;
             currentYear++;
           }
-        //this if statement should probably be looked at more
         if (leapYear >= Bob && year <= Bob && currentYear % 4 == 0) {
-          break;
           currentLeapYear = 1;
+          break;
         } else if ( year >= Bob) {
           currentLeapYear = 0;
           break;
         }
       }
-      //set a loop for months here(include checking leap years) don't need to do a check because if it is a leap year, currentLeapYear will be #1 in the array, and if it isn't, currentLeapYear will be #0 in the array
+      //don't need to do a check because if it is a leap year, currentLeapYear will have a value of1 in the array, and if it isn't, currentLeapYear will be #0 in the array
       int i = 0;
       while(1) {
-        //months may be the reason that days are off, because I don't know what else could cause it. 
         if (month[currentLeapYear][i] > Bob) {
           currentMonth = i + 1; //+1 is only because arrays start at 0
           Bob -= month[currentLeapYear][i-1];
@@ -92,6 +92,9 @@
            break;
         }
        }
+      if (military != 1 && currentHour > 12) {
+        currentHour -= 12;
+      }
       while(1) {
        if (Bob >= minute) {
          Bob -= minute;
@@ -121,10 +124,9 @@
         }
       printf("Current date is %d/%d/%d \n", currentMonth, currentDay, currentYear);
       //Since apparently the sleep() function can only use seconds, we have to use the usleep() function, which takes microseconds.
-      usleep(100000);
+      usleep(1000);
       } else {
-        usleep(100000);
+        usleep(1000);
       }
-      // print \033[0;0H\033[2J to clear the console (https://replit.com/talk/ask/Clearing-a-screen-in-replit-for-the-C-language/15256)
     }
   }
