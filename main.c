@@ -24,10 +24,10 @@ const int year = 31536000;
 const int leapYear = 31622400;
 int main(void) {
 
-  // set to PST during DST
-  int timezone = -7;
+  // set to PST
+  int timezone = -8;
   int military = 0;
-  /*
+  /* Part that would determine timezone/military time, uncomment to add
   printf("Current timezone? (PST would be -8 without DST, -7 with)\n");
   scanf("%d", &timezone);
   printf("Enter 1 for 24 hour clock, anything else for 12 hour clock.\n");
@@ -51,9 +51,11 @@ int main(void) {
       int currentSecond = 0;
       while (1) {
         if (currentYear % 4 == 0) {
-          Bob -= leapYear;
-          currentYear++;
-          leapDays++;
+          if((currentYear % 100 == 0 && currentYear % 400 == 0) || (currentYear % 100 != 0)) {
+            Bob -= leapYear;
+            currentYear++;
+            leapDays++;
+          }
         } else {
           Bob -= year;
           currentYear++;
@@ -80,10 +82,10 @@ int main(void) {
       if (!(military) && currentHour > 12) {
         currentHour -= 12;
       }
-
+        
       currentMinute = currentTime(&Bob, minute, currentMinute);
       currentSecond = currentTime(&Bob, second, currentSecond);
-      printf("Current time is %d:", currentHour);
+      printf("Current time is %d:", (currentHour == 0) && !(military)?12:currentHour);
       if (currentMinute < 10) {
         printf("0%d:", currentMinute);
       } else {
@@ -96,8 +98,8 @@ int main(void) {
       }
       printf("Current date is %d/%d/%d \n", currentMonth, currentDay,
              currentYear);
-      // Since apparently the sleep() function can only use seconds, we have to use the usleep() function, which takes microseconds. right now, it is 1 millisecond
-      usleep(5000);
+      // Since apparently the sleep() function can only use seconds, we have to use the usleep() function, which takes microseconds. right now, it is 1 millisecond. For the future, possibly add a function that syncs up then waits for longer, to reduce strain.
+      usleep(1000);
     } else {
       usleep(1000);
     }
