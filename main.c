@@ -41,7 +41,6 @@ int main(void) {
       // Bob is used to manipulate the time without touching its actual value
       int Bob = hello;
       Bob += (timezone * hour);
-      int *Joe = &Bob;
       int leapDays = 0;
       int currentYear = 1970;
       int currentLeapYear = 0;
@@ -75,15 +74,15 @@ int main(void) {
         }
       }
 
-      currentDay = currentTime(Joe, day, currentDay);
-      currentHour = currentTime(Joe, hour, currentHour);
+      currentDay = currentTime(&Bob, day, currentDay);
+      currentHour = currentTime(&Bob, hour, currentHour);
 
       if (!(military) && currentHour > 12) {
         currentHour -= 12;
       }
 
-      currentMinute = currentTime(Joe, minute, currentMinute);
-      currentSecond = currentTime(Joe, second, currentSecond);
+      currentMinute = currentTime(&Bob, minute, currentMinute);
+      currentSecond = currentTime(&Bob, second, currentSecond);
       printf("Current time is %d:", currentHour);
       if (currentMinute < 10) {
         printf("0%d:", currentMinute);
@@ -97,10 +96,8 @@ int main(void) {
       }
       printf("Current date is %d/%d/%d \n", currentMonth, currentDay,
              currentYear);
-      // Since apparently the sleep() function can only use seconds, we have to
-      // use the usleep() function, which takes microseconds. right now, it is 1
-      // millisecond
-      usleep(1000);
+      // Since apparently the sleep() function can only use seconds, we have to use the usleep() function, which takes microseconds. right now, it is 1 millisecond
+      usleep(5000);
     } else {
       usleep(1000);
     }
